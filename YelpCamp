@@ -1,1 +1,75 @@
 
+// node app.js / run the file
+// ctrl+c restart server
+//mkdir foldername /create folder
+//touch filename / create file
+// npm init / isntal product
+// npm install -- save express ejs / instal pacages
+//npm install body-parser --save
+//npm install mongo0se --save /DB
+//mdkir views
+//mkdir views/partials
+// mkdir views/partials/header.ejs and footer.ejs
+// partials don't work <%- include("partials/header") %> and <%- include("partials/footer") %>
+//https://dilyan-borisov.run-us-west2.goorm.io  / starting page
+
+
+var express = require("express");
+
+var app = express();
+app.set("view engine", "ejs"); // runs all ejs fiels
+var bodyParser = require("body-parser");
+app.use(bodyParser.urlencoded({extended: true}));
+
+
+
+// global variable
+var campgrounds = [
+        {name: "Salmon Creek", image: "https://farm9.staticflickr.com/8442/7962474612_bf2baf67c0.jpg"},
+        {name: "Granite Hill", image: "https://farm1.staticflickr.com/60/215827008_6489cd30c3.jpg"},
+        {name: "Mountain Goat's Rest", image: "https://farm7.staticflickr.com/6057/6234565071_4d20668bbd.jpg"}
+];
+
+
+//1st file lending page
+app.get("/", function(req, res){
+    res.render("landing"); // go to file home.ejs and add html header and footer
+});
+
+
+
+    
+//2nd file
+app.get("/campgrounds", function(req, res){
+    res.render("campgrounds",{campgrounds:campgrounds});
+});
+
+
+
+app.post("/campgrounds", function(req, res){
+    // get data from form and add to campgrounds array
+    var name = req.body.name;
+    var image = req.body.image;
+    var newCampground = {name: name, image: image}
+    campgrounds.push(newCampground);
+    //redirect back to campgrounds page
+    res.redirect("/campgrounds");
+});
+
+//3rd file
+app.get("/campgrounds/new", function(req, res){
+   res.render("new.ejs"); 
+});
+
+
+
+
+//page not found
+app.get("*", function(req,res){
+	res.send("The page not found. KR, Dilyan"); 
+});
+
+//server conection
+app.listen(process.env.Port || 3000, process.env.IP, function(){
+	console.log("Server running");
+});
